@@ -11,8 +11,6 @@ def validUTF8(data):
     """
     n_bytes = 0
     for byte in data:
-        if byte < 0 or byte > 255:
-            return False
         if n_bytes == 0:
             if (byte & 0b10000000) == 0b00000000:
                 n_bytes = 0  # 1-byte character
