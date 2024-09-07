@@ -1,7 +1,6 @@
 #!/usr/bin/node
 
 const request = require('request');
-
 const movieId = process.argv[2];
 const movieUrl = `https://swapi-api.hbtn.io/api/films/${movieId}/`;
 request(movieUrl, (error, response, body) => {
@@ -15,18 +14,25 @@ request(movieUrl, (error, response, body) => {
     return;
   }
   const characterUrls = movieData.characters;
-  characterUrls.forEach((characterUrl) => {
-    request(characterUrl, (err, res, characterBody) => {
-      if (err) {
-        return;
-      }
-      let characterData;
+  const fetchCharacters = async () => {
+    for (const characterUrl of characterUrls) {
       try {
-        characterData = JSON.parse(characterBody);
+        const characterResponse = await new Promise((resolve, reject) => {
+          request(characterUrl, (err, res, characterBody) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(characterBody);
+            }
+          });
+        });
+        const characterData = JSON.parse(characterResponse);
+        console.log(characterData.name);
       } catch (err) {
-        return;
+        continue;
       }
-      console.log(characterData.name);
-    });
-  });
+    }
+  };
+  fetchCharacters();
 });
+
