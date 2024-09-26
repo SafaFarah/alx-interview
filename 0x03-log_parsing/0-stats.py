@@ -20,9 +20,9 @@ def main():
     )
     try:
         for line in sys.stdin:
-            line_count += 1
             match = log_pattern.match(line)
             if match:
+                line_count += 1
                 status_code = int(match.group(3))
                 file_size = int(match.group(4))
                 total_file_size += file_size
