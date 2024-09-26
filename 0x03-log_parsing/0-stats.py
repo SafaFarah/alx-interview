@@ -5,6 +5,7 @@ A script that reads log entries from stdin and computes metrics.
 
 import sys
 import re
+from collections import defaultdict
 
 
 def main():
@@ -12,7 +13,7 @@ def main():
     The main function that executes the log parsing and metrics calculation.
     """
     total_file_size = 0
-    status_codes = {}
+    status_codes = defaultdict(int)  # Using defaultdict for simplicity
     line_count = 0
     log_pattern = re.compile(
         r'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}) - \[(.*?)\] '
@@ -20,15 +21,14 @@ def main():
     )
     try:
         for line in sys.stdin:
+            line_count += 1
             match = log_pattern.match(line)
             if match:
-                line_count += 1
                 status_code = int(match.group(3))
                 file_size = int(match.group(4))
                 total_file_size += file_size
                 if status_code in {200, 301, 400, 401, 403, 404, 405, 500}:
-                    status_codes[status_code] = status_codes.get(
-                            status_code, 0) + 1
+                    status_codes[status_code] += 1
                 if line_count % 10 == 0:
                     print_statistics(total_file_size, status_codes)
         print_statistics(total_file_size, status_codes)
