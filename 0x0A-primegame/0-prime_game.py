@@ -29,35 +29,33 @@ def isWinner(x, nums):
 
     for i in range(x):
         n = nums[i]
-        available = list(range(1, n + 1))  # Create a list of numbers from 1 to n
-        turn = 0  # Maria starts first (turn 0 for Maria, 1 for Ben)
+        available = list(range(2, n + 1))  # Start with numbers from 2 to n
+        turn = 0  # Maria starts first (0 for Maria, 1 for Ben)
         
-        while True:
-            # Find the first available prime
+        while available:
             prime_found = False
             for num in available:
-                if is_prime(num):
-                    prime = num
+                if is_prime(num):  # Find the first prime
                     prime_found = True
+                    # Remove prime and its multiples
+                    available = [x for x in available if x % num != 0]
                     break
-            
+
             if not prime_found:
-                # No more primes to pick, current player loses
+                # No more primes available
                 if turn % 2 == 0:
                     ben_wins += 1  # Maria's turn, Ben wins
                 else:
                     maria_wins += 1  # Ben's turn, Maria wins
                 break
-            
-            # Remove the prime and its multiples from the available numbers
-            available = [num for num in available if num % prime != 0]
-            
-            # Switch turn (0 for Maria, 1 for Ben)
+
+            # Switch turns
             turn += 1
 
-    # Determine who won the most rounds
+    # Determine who won more rounds
     if maria_wins > ben_wins:
         return "Maria"
     elif ben_wins > maria_wins:
         return "Ben"
     return None
+
