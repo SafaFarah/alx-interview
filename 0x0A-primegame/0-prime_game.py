@@ -15,6 +15,8 @@ def isWinner(x, nums):
     """
     maria_wins = 0
     ben_wins = 0
+    if nums is None or x < 1:
+        return None
 
     def is_prime(num):
         """Return True if num is prime, else False."""
