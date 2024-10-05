@@ -3,6 +3,7 @@
 Maria and Ben play x rounds of a game where they choose primes from 1 to n.
 """
 
+
 def sieve_of_eratosthenes(n):
     """Generates a list indicating prime numbers up to n."""
     sieve = [True] * (n + 1)
